@@ -22,8 +22,8 @@ const posts = [
 
 let refreshTokens = [];
 
-app.get('/api', (req,res)=>{
-  res.json({mensaje: 'Funcionando'})
+app.get('/', (req,res)=>{
+  res.json({mensaje: 'Funcionando backend de EPIcalls'})
 })
 
 //Get users
