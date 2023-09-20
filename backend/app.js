@@ -22,6 +22,10 @@ const posts = [
 
 let refreshTokens = [];
 
+app.get('/api', (req,res)=>{
+  res.json({mensaje: 'Funcionando'})
+})
+
 //Get users
 app.get('/api/users', authenticateToken, (req, res) => {
   res.json(users);
