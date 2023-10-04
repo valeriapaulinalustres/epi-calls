@@ -2,11 +2,13 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import cors from 'cors'
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors())
 
 const users = [];
 const posts = [
@@ -41,7 +43,7 @@ app.post('/api/users/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10); //las contraseñas siempre se deben pasar como string para que funcionen!!
 
-    const user = { name: req.body.name, password: hashedPassword };
+    const user = { name: req.body.name, password: hashedPassword, mail: req.body.mail, role: req.body.role };
     users.push(user);
     res.status(201).send('User registered');
   } catch (error) {
@@ -51,7 +53,7 @@ app.post('/api/users/register', async (req, res) => {
 
 //Users login
 app.post('/api/users/login', async (req, res) => {
-  const user = users.find((el) => el.name === req.body.name);
+  const user = users.find((el) => el.mail === req.body.mail);
   console.log(user);
   if (!user) {
     return res.status(400).send('Cannot find user');
@@ -62,12 +64,12 @@ app.post('/api/users/login', async (req, res) => {
       // res.send('Login successfull');
 
       //Authorization
-      const username = req.body.name;
-      const user = { name: username };
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken(user);
+      
+      const userMail = { mail: req.body.mail };
+      const accessToken = generateAccessToken(userMail);
+      const refreshToken = generateRefreshToken(userMail);
       refreshTokens.push(refreshToken);
-      res.json({ accessToken: accessToken, refreshToken: refreshToken });
+      res.json({ accessToken: accessToken, refreshToken: refreshToken, mail: user.mail, name:user.name, role:user.role});
     } else {
       res.send('Not allowed');
     }
@@ -136,4 +138,8 @@ app.listen(8081, () => {
 //env terminarlo
 
 //próx proyecto si tiene solo bd con login usar next con su server (video de fazt)
+
+//dirección del backend: https://epi-calls-dghuty6mh-valeriapaulinalustres.vercel.app/
+
+//dirección del frontend: https://epi-calls-disease.vercel.app/
 
