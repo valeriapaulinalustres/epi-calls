@@ -1,10 +1,12 @@
 'use client'
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseURL } from "../utils";
+
 
 
 export const loginApi = createApi({
     reducerPath: 'loginApi',
-    baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:8081/'}),
+    baseQuery: fetchBaseQuery({baseUrl: baseURL}),
     endpoints: (builder) => ({
         login: builder.mutation({
             query: (auth) => ({
