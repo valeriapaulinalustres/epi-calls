@@ -31,8 +31,6 @@ function Home() {
           console.log(result);
           dispatch(setUser(result.data));
           router.push('/home/client');
-
-          //navegar a home y en su useffect llamar con el access token a los pacientes
         } else if (result.isError) {
           console.log(result.isError);
         }
@@ -44,7 +42,7 @@ function Home() {
 
   function handleLogin() {
     console.log(mail, password);
-    //falta chequear que tenga formato de mail
+
     try {
       triggerLogin({ mail, password });
     } catch (error) {

@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import cors from 'cors'
+import config from './src/config.js'
+import "./src/persistence/dbConfig/dbConfig.js"
 
 dotenv.config();
 
@@ -121,7 +123,9 @@ function authenticateToken(req, res, next) {
   });
 }
 
-app.listen(8081, () => {
+const PORT = config.PORT || 8081;
+
+app.listen(PORT, () => {
   console.log('listening on port 8081');
 });
 
