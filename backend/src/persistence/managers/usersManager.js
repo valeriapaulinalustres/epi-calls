@@ -15,7 +15,22 @@ export default class UsersManager {
         return { success: false, message: 'No users in DB' };
       }
 
-      return { success: true, message: 'Users got successfully', users };
+      const usersForFrontend = users.map((el) => {
+        return {
+          name: el.name,
+          mail: el.mail,
+          role: el.role,
+          lastConnection: el.lastConnection,
+          profession: el.profession,
+          _id: el._id,
+        };
+      });
+
+      return {
+        success: true,
+        message: 'Users got successfully',
+        users: usersForFrontend,
+      };
     } catch (error) {
       // logger.error("Error", error);
       throw new Error(error);
