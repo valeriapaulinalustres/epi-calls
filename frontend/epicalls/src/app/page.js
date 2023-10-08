@@ -30,7 +30,12 @@ function Home() {
         if (result.isSuccess) {
           console.log(result);
           dispatch(setUser(result.data));
-          router.push('/home/client');
+          if (result.data.role === 'admin') {
+            router.push('/home/admin');
+
+          } else if (result.data.role === 'client'){
+            router.push('/home/client')
+          }
         } else if (result.isError) {
           console.log(result.isError);
         }

@@ -5,7 +5,7 @@ import { useTokenMutation } from '@/redux/services/loginServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-function HomeClient() {
+function ClientsWork() {
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
 
@@ -36,7 +36,7 @@ function HomeClient() {
     })();
   }, [result]);
 
-  return <div>Home Client</div>;
+  return <div>Clients Work</div>;
 }
 
-export default HomeClient;
+export default ClientsWork;
