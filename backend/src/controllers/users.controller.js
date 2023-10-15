@@ -14,7 +14,7 @@ export const getUsersController = async (req, res) => {
     const response = await getUsersService();
     res.json(response);
   } catch (error) {
-    console.log('error');
+    console.log('error', error);
     // logger.error("Error del controller", error);
   }
 };
@@ -24,7 +24,7 @@ export const registerUserController = async (req, res) => {
     const response = await registerUserService(req.body);
     res.json(response);
   } catch (error) {
-    console.log('error');
+    console.log('error', error);
     // logger.error("Error del controller", error);
   }
 };
@@ -34,7 +34,7 @@ export const loginUserController = async (req, res) => {
     const response = await loginUserService(req.body);
     res.json(response);
   } catch (error) {
-    console.log('error');
+    console.log('error', error);
   }
 };
 
@@ -43,7 +43,7 @@ export const getRefreshTokenController = async (req, res) => {
     const response = await getRefreshTokenService(req.body)
     res.json(response)
   } catch (error) {
-    console.log('error')
+    console.log('error', error)
   }
 }
 
@@ -52,6 +52,6 @@ export const logoutController = async (req, res) => {
     const response = await logoutService(req.body)
     res.json(response)
   } catch (error) {
-    console.log('error')
+    console.log('error', error)
   }
 }

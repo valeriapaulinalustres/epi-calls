@@ -4,6 +4,7 @@ import cors from 'cors'
 import config from './src/config.js'
 import "./src/persistence/dbConfig/dbConfig.js"
 import usersRouter from './src/routes/users.router.js'
+import projectsRouter from './src/routes/projects.router.js'
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ app.get('/', (req,res)=>{
 })
 
 app.use("/api/users", usersRouter);
+app.use("/api/projects", projectsRouter)
+
 
 
 const PORT = config.PORT || 8081;
