@@ -5,6 +5,7 @@ import config from './src/config.js'
 import "./src/persistence/dbConfig/dbConfig.js"
 import usersRouter from './src/routes/users.router.js'
 import projectsRouter from './src/routes/projects.router.js'
+import sheetsRouter from './src/routes/sheets.router.js'
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.get('/', (req,res)=>{
 
 app.use("/api/users", usersRouter);
 app.use("/api/projects", projectsRouter)
-
+app.use("api/sheets", sheetsRouter)
 
 
 const PORT = config.PORT || 8081;
