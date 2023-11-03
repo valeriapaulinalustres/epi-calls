@@ -21,7 +21,7 @@ app.get('/', (req,res)=>{
 
 app.use("/api/users", usersRouter);
 app.use("/api/projects", projectsRouter)
-app.use("api/sheets", sheetsRouter)
+app.use("/api/sheets", sheetsRouter)
 
 
 const PORT = config.PORT || 8081;

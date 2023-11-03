@@ -2,16 +2,17 @@
 
 import { setUser } from '@/redux/features/login/loginSlice';
 import { useTokenMutation } from '@/redux/services/loginServices';
+import { useCreatesheetMutation } from '@/redux/services/sheetServices';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as xlsx from 'xlsx';
 
 function HomeAdmin() {
-
-  const [csvUploaded, setCsvUploaded] = useState([]) //Keeps the uploaded csv's information
+  const [csvUploaded, setCsvUploaded] = useState([]); //Keeps the uploaded csv's information
 
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
+  const [triggerCreateSheet, resultSheet] = useCreatesheetMutation();
 
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
@@ -42,7 +43,7 @@ function HomeAdmin() {
 
   //Function to upload extern CSV
 
-   const readExcel = (file) => {
+  const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
@@ -60,32 +61,68 @@ function HomeAdmin() {
     });
     promise.then((d) => {
       setCsvUploaded(d);
-       console.log(d);
-     // setSpinner(false);
+      console.log(d);
+      triggerCreateSheet({
+        excel: d,
+        project: {
+          patientsFilter: {
+            searchFromInWeeks: 18,
+            disease: 'Dengue',
+            diagnosis: 'Confirmados',
+            collaboratorsTodayActive: false,
+            collaborators: ['Ana', 'Laura'],
+          },
+        },
+      });
+      // setSpinner(false);
     });
   };
-console.log('csv uploaded', csvUploaded)
-  return <>
-      <p>Home Admin</p>
-  
-      {/* Input to upload CSV */}
-      <div className='file-select' id='src-file1'>
-        <input
-          type='file'
-          className='inputButton'
-          name='src-file1'
-          aria-label='Archivo'
-          onChange={(e) => {
-            const file = e.target.files[0];
-            readExcel(file);
-           // setSpinner(true);
-           
-          }}
-        />
+  console.log('csv uploaded', csvUploaded);
+
+  const actualProject = 'Dengue 2023';
+  return (
+    <div className='w-screen h-screen px-20 py-20'>
+      <div className='w-1/3 rounded-3xl  shadow-md'>
+        <div className='w-full h-14 bg-cyan-500 rounded-t-3xl flex justify-center align-middle'>
+          <div className=' text-white text-2xl my-auto'>
+            Proyecto Actual: {actualProject}
+          </div>
+        </div>
+        <div className='w-full flex justify-between align-top p-5'>
+          <div>
+            {/* Input to upload CSV */}
+            <div
+              className='w-full flex-row justify-between align-middle'
+              id='src-file1'
+            >
+              <input
+                type='file'
+                className='inputButton'
+                name='src-file1'
+                aria-label='Archivo'
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  readExcel(file);
+                  // setSpinner(true);
+                }}
+              />
+            </div>
+            <p className='my-4'>Colaboradores del proyecto</p>
+            <div className='w-full ml-3'>
+              <p className='text-cyan-500'>Lara</p>
+              <p className='text-cyan-500'>Lourdes</p>
+            </div>
+            <div className='w-full flex justify-between align-middle '>
+              <p className='text-orange-500 my-4'>
+                ¿Desea modificar los colaboradores para el día de hoy?
+              </p>
+              <input type='checkbox' className='ml-3' />
+            </div>
+          </div>
+        </div>
       </div>
 
-
-    {/* <div className='upload-spinner'>
+      {/* <div className='upload-spinner'>
       {spinnerHomeClinica && <Loading />}
     </div>
 
@@ -94,7 +131,8 @@ console.log('csv uploaded', csvUploaded)
     ) : (
       <p className='notUploaded-file'>No hay archivos cargados</p>
     )} */}
-  </>
+    </div>
+  );
 }
 
 export default HomeAdmin;

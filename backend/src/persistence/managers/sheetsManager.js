@@ -1,10 +1,11 @@
 import { sheetModel } from '../models/sheet.model.js';
+import { projectModel } from '../models/project.model.js';
 
 function removeDuplicated(arr) {
   let noDuplicated = [];
   for (let i = 0; i < arr.length; i++) {
     const el1 = arr[i];
-    let filtered = noDuplicated.filter((el) => el.DNI === el1.DNI);
+    let filtered = noDuplicated.filter((el) => el.DNI == el1.DNI);
     if (filtered.length === 0) {
       noDuplicated.push(el1);
     }
@@ -48,7 +49,7 @@ const db = [
   { dni: 3, nombre: 'c' },
 ];
 
-function divideArray(array, num) {
+function divideArray(array, num, collaborators) {
   const newArraysLength = Math.ceil(array.length / num);
   console.log(newArraysLength);
   const newSheets = [];
@@ -75,12 +76,44 @@ export default class sheetsManager {
   }
 
   async createSheets(excelAndProject) {
+    //el front va a enviar {excel: [], projectId: "837483024", userId: "dshfkasfdsa"}
     try {
-      //Get sheets in database and join them with method flat
+      //Get project
+      const projectFromDb = await projectModel.find({
+        _id: excelAndProject.projectId,
+      });
+      console.log('projectFromDb', projectFromDb);
+      //Get sheets in database
       const db = await sheetModel.find();
-      const dbJoined = db.flat();
+
+      console.log('db', db);
+
+      // if (db.length === 0) {
+      //   const newSheetsFromDb = await sheetModel.create(finalNewSheets);
+
+      //     return {message: 'Sheets created successfully', success: true, newSheets: newSheetsFromDb}
+      // }
+
+      //Get excels from each sheet stored in db
+      let dbWithoutCollaborators;
+      if (db.length > 0) {
+        dbWithoutCollaborators = db.excel.map((el) => {
+          return el.sheet;
+        });
+      } else {
+        dbWithoutCollaborators = [];
+      }
+
+      console.log('dbwiwhout', dbWithoutCollaborators);
+      // const dbJoined = db.flat();
+
       //Filter duplicated DNI in excel
       const dbWithoutDuplicates = removeDuplicated(excelAndProject.excel);
+
+      console.log('excelAndProject.excel', excelAndProject.excel);
+console.log('db sin duplicados', dbWithoutDuplicates)
+
+console.log('se in project',  projectFromDb[0].patientsFilter.searchFromInWeeks)
 
       //Filter by SE in excel
       const dbFilteredBySE = [];
@@ -88,20 +121,28 @@ export default class sheetsManager {
         if (dbWithoutDuplicates[i].SE_APERTURA == '*sin dato*') {
           dbFilteredBySE.push(dbWithoutDuplicates[i]);
         }
-        if (
+     else if (
           dbWithoutDuplicates[i].SE_APERTURA >=
-          numeroDeSemanaActual -
-            excelAndProject.patientsFilter.searchFromInWeeks
+          (numeroDeSemanaActual -
+            projectFromDb[0].patientsFilter.searchFromInWeeks)
         ) {
           dbFilteredBySE.push(dbWithoutDuplicates[i]);
         }
       }
 
+      console.log('se', numeroDeSemanaActual)
+
+      console.log('filtrado por se', dbFilteredBySE)
+
       //Filter by diagnosis in excel
       const dbFilteredByDiagnosis = [];
       for (let i = 0; i < dbFilteredBySE.length; i++) {
-        if (excelAndProject.disease === 'Dengue') {
-          if (excelAndProject.patientsFilter.diagnosis === 'confirmados') {
+        if (projectFromDb[0].disease === 'Dengue') {
+          console.log('entra0')
+          if (
+            projectFromDb[0].patientsFilter.diagnosis[0].includes('Caso confirmado')
+          ) {
+            console.log('entra acá if')
             if (
               dbFilteredBySE[i].CLASIFICACION_MANUAL ===
                 'Caso confirmado sin serotipo' ||
@@ -114,71 +155,106 @@ export default class sheetsManager {
               dbFilteredBySE[i].CLASIFICACION_MANUAL ===
                 'Caso de Dengue en brote con laboratorio (+)'
             ) {
+              console.log('entra2')
               dbFilteredByDiagnosis.push(dbFilteredBySE[i]);
             }
           }
-          if (
-            excelAndProject.patientsFilter.diagnosis ===
-            'confirmados y sospechosos'
+          else if (
+            projectFromDb[0].patientsFilter.diagnosis[0].includes('Caso sospechoso')
           ) {
+            console.log('entra3')
             if (
-              dbFilteredBySE[i].CLASIFICACION_MANUAL ===
-                'Caso confirmado sin serotipo' ||
-              dbFilteredBySE[i].CLASIFICACION_MANUAL ===
-                'Caso confirmado DEN-2' ||
-              dbFilteredBySE[i].CLASIFICACION_MANUAL ===
-                'Caso confirmado por nexo epidemiológico autóctono' ||
-              dbFilteredBySE[i].CLASIFICACION_MANUAL ===
-                'Caso confirmado DEN-1' ||
-              dbFilteredBySE[i].CLASIFICACION_MANUAL ===
-                'Caso de Dengue en brote con laboratorio (+)' ||
+              // dbFilteredBySE[i].CLASIFICACION_MANUAL ===
+              //   'Caso confirmado sin serotipo' ||
+              // dbFilteredBySE[i].CLASIFICACION_MANUAL ===
+              //   'Caso confirmado DEN-2' ||
+              // dbFilteredBySE[i].CLASIFICACION_MANUAL ===
+              //   'Caso confirmado por nexo epidemiológico autóctono' ||
+              // dbFilteredBySE[i].CLASIFICACION_MANUAL ===
+              //   'Caso confirmado DEN-1' ||
+              // dbFilteredBySE[i].CLASIFICACION_MANUAL ===
+              //   'Caso de Dengue en brote con laboratorio (+)' ||
               dbFilteredBySE[i].CLASIFICACION_MANUAL === 'Caso sospechoso' ||
               dbFilteredBySE[i].CLASIFICACION_MANUAL ===
                 'Caso sospechoso no conclusivo' ||
               dbFilteredBySE[i].CLASIFICACION_MANUAL === 'Caso probable'
             ) {
+              console.log('entra4')
               dbFilteredByDiagnosis.push(dbFilteredBySE[i]);
             }
           }
         }
+        console.log('no entra', projectFromDb[0])
       }
-      //Filter by DNI with mongoDB
+
+      console.log('filtro por clasificación', dbFilteredByDiagnosis)
+
+
+      //Here we jouin new excel with excel in Mongo Atlas. Filter by DNI with mongoDB 
       const dbFilteredWithMongo = [];
       for (let i = 0; i < dbFilteredByDiagnosis.length; i++) {
-        const exists = dbJoined.findIndex(
+        const exists = dbWithoutCollaborators.findIndex(
           (el) => el.DNI === dbFilteredByDiagnosis[i].DNI
         );
-        if (!exists) {
+        if (exists === -1) {
           dbFilteredWithMongo.push(dbFilteredByDiagnosis[i]);
         }
       }
+
+console.log('dbFilteredWithMongo', dbFilteredWithMongo)
+
       //Join both, excel and mongoDB database
-      const result = [...dbFilteredWithMongo, ...dbJoined];
+      const result = [...dbFilteredWithMongo, ...dbWithoutCollaborators];
+
+      console.log('result', result)
       //Split sheets into different collaborators (update property collaborator with id and createdAt). If collaboratorsTodayActive is true, must change collaborators
-      
+
       let newSheets;
 
-      if (excelAndProject.collaboratorsTodayActive) {
-     newSheets = divideArray(
-          result,
-          excelAndProject.collaboratorsToday.length
-        );
-
-      
-      } else {
+      if (projectFromDb[0].collaboratorsTodayActive) {
         newSheets = divideArray(
           result,
-          excelAndProject.collaborators.length
+          projectFromDb[0].collaboratorsToday.length.
+          projectFromDb[0].collaborators
         );
-        
-    }
-    await sheetModel.findByIdAndDelete(db._id);
-   const newSheetsFromDb = await sheetModel.create(newSheets);
-    return {message: 'Sheets created successfully', success: true, newSheets: newSheetsFromDb}
+      } else {
+        newSheets = divideArray(result, projectFromDb[0].collaborators.length, projectFromDb[0].collaborators);
+      }
+
+      console.log('newsheets', newSheets);
+/*
+      let allSheets = [];
+
+      for (let i = 0; i < newSheets.length; i++) {
+        const aux = {
+          sheet: newSheets[i],
+          collaborator: projectFromDb.collaborators[i],
+        };
+        allSheets.push(aux);
+      }
+      const finalNewSheets = {
+        excel: [...allSheets],
+        updatedAt: new Date(),
+        updatedBy: excelAndProject.userId,
+      };
+
+      console.log('finalnewsheet', finalNewSheets);
+*/
+         await sheetModel.findByIdAndDelete(db._id);
+        const newSheetsFromDb = await sheetModel.create(newSheets);
+
+      return {
+        message: 'Sheets created successfully',
+        success: true,
+        newSheets: newSheetsFromDb,
+      };
+  
+
     } catch (error) {
       console.log('error del manager', error);
     }
   }
+
 
   async updateSheet(updatedSheet) {
     try {

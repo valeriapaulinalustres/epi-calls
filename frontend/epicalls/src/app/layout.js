@@ -1,6 +1,7 @@
 
 import "./globals.css";
 import  {Providers} from '../redux/Providers';
+import {Navbar} from '../components/Navbar.js'
 
 //const inter = Inter({ subsets: ['latin'] })
 
@@ -17,7 +18,15 @@ function RootLayout({
       <Providers>
 
       <body>
-        {children}
+        
+              <div id='containerMain' >
+                <Navbar />
+                <div className={"containerPage"} >
+                  {children}
+                </div>
+                {/* <Footer/> */}
+              </div>
+           
       </body>
       </Providers>
     </html>
@@ -25,3 +34,5 @@ function RootLayout({
 }
 
 export default RootLayout
+
+
