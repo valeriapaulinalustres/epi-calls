@@ -4,6 +4,8 @@ import { setUser } from '@/redux/features/login/loginSlice';
 import { useTokenMutation } from '@/redux/services/loginServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { BsFillTelephoneFill } from 'react-icons/bs';
+import { IoIosArrowDown } from 'react-icons/io';
 
 function HomeClient() {
   const dispatch = useDispatch();
@@ -36,7 +38,35 @@ function HomeClient() {
     })();
   }, [result]);
 
-  return <div>Home Client</div>;
+  return (
+    <div className='w-screen h-screen px-20 py-20'>
+      <div className='w-full flex justify-between align-middle mb-16'>
+        <div className='w-1/3 rounded-3xl  shadow-md'>
+          <div className='w-full h-14 bg-orange rounded-t-3xl flex justify-center align-middle'>
+            <div className=' text-white text-2xl my-auto'>
+              Llamados a realizar el ...
+            </div>
+          </div>
+          <div className='w-full flex justify-between align-top p-5'>
+            <div className='w-full flex-col justify-between align-middle'>
+              <div className='w-full border-solid border-cyan shadow-md flex justify-between align-middle p-2 rounded-sm mb-2'>
+                <p className='text-green w-1/3'>Laura</p>
+                <div className='flex justify-between align-middle w-1/4'>
+                  <BsFillTelephoneFill className='text-green' />
+                  <p>121217291</p>
+                </div>
+                <IoIosArrowDown />
+              </div>
+              <div className='bg-grey p-3'>
+descripción
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      ;
+    </div>
+  );
 }
 
 export default HomeClient;

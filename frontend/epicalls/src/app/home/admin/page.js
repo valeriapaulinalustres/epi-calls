@@ -82,8 +82,9 @@ function HomeAdmin() {
   const actualProject = 'Dengue 2023';
   return (
     <div className='w-screen h-screen px-20 py-20'>
+      <div className='w-full flex justify-between align-middle mb-16'>
       <div className='w-1/3 rounded-3xl  shadow-md'>
-        <div className='w-full h-14 bg-cyan-500 rounded-t-3xl flex justify-center align-middle'>
+        <div className='w-full h-14 bg-cyan rounded-t-3xl flex justify-center align-middle'>
           <div className=' text-white text-2xl my-auto'>
             Proyecto Actual: {actualProject}
           </div>
@@ -109,8 +110,8 @@ function HomeAdmin() {
             </div>
             <p className='my-4'>Colaboradores del proyecto</p>
             <div className='w-full ml-3'>
-              <p className='text-cyan-500'>Lara</p>
-              <p className='text-cyan-500'>Lourdes</p>
+              <p className='text-cyan'>Lara</p>
+              <p className='text-cyan'>Lourdes</p>
             </div>
             <div className='w-full flex justify-between align-middle '>
               <p className='text-orange-500 my-4'>
@@ -122,6 +123,53 @@ function HomeAdmin() {
         </div>
       </div>
 
+      <div className='w-1/3 rounded-3xl  shadow-md'>
+        <div className='w-full h-14 bg-orange rounded-t-3xl flex justify-center align-middle'>
+          <div className=' text-white text-2xl my-auto'>
+            Estadística General
+          </div>
+        </div>
+        <div className='w-full flex-col justify-between align-top p-5'>
+          <div className='w-full flex h-9 m-3'>
+            <div className='w-1/2 justify-self-end'>Confirmados Total: </div>
+            <div className='w-9 justify-self-start rounded-full border-solid border-2 border-cyan-500  flex justify-center align-middle '>
+              10
+            </div>
+          </div>
+          <div className='w-full flex h-9 m-3'>
+            <div className='w-1/2 justify-self-end'>Confirmados Total: </div>
+            <div className='w-9 justify-self-start rounded-full border-solid border-2 border-cyan-500 flex justify-center align-middle '>
+              10
+            </div>
+          </div>
+          <div className='w-full flex h-9 m-3'>
+            <div className='w-1/2 justify-self-end'>Confirmados Total: </div>
+            <div className='w-9 justify-self-start rounded-full border-solid border-2 border-cyan-500 justify-center align-middle'>
+              10
+            </div>
+          </div>
+          <div className='w-full flex h-9 m-3'>
+            <div className='w-1/2 justify-self-end'>Confirmados Total: </div>
+            <div className='w-9 justify-self-start rounded-full border-solid border-2 border-cyan-500 justify-center align-middle'>
+              10
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+     
+
+       
+      <div className='w-1/3 rounded-3xl  shadow-md'>
+        <div className='w-full h-14 bg-green rounded-t-3xl flex justify-center align-middle'>
+          <div className=' text-white text-2xl my-auto'>
+            Proyectos Vigentes
+          </div>
+        </div>
+        <div className='w-full flex-col justify-between align-top p-5'>
+          <div>Dengue 2023</div>
+        </div>
+        </div>
       {/* <div className='upload-spinner'>
       {spinnerHomeClinica && <Loading />}
     </div>

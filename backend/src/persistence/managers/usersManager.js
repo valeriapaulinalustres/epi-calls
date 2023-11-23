@@ -99,18 +99,19 @@ export default class UsersManager {
   }
 
   async getRefreshToken(token) {
+    console.log('token',token)
     try {
       const refreshToken = token.token;
       if (refreshToken == null)
         return { success: false, message: 'No valid token' };
 
       const refreshTokens = await tokenModel.find({ name: refreshToken });
-
+console.log('refresh', refreshTokens)
       if (refreshTokens[0].name !== refreshToken)
         return { success: false, message: 'No valid token' };
 
       let newAccessToken;
-      let newRefreshToken;
+      let newRefreshToken
 
       jwt.verify(
         refreshToken,
@@ -120,17 +121,18 @@ export default class UsersManager {
           newAccessToken = generateAccessToken({ name: user.name });
           newRefreshToken = generateRefreshToken({ name: user.name });
 
-          await tokenModel.create({ name: newRefreshToken });
+          await tokenModel.create({ name: newRefreshToken })
         }
       );
 
       //Removes previous refreshToken
-      await tokenModel.findOneAndRemove({ name: token.token });
-      return {
-        success: true,
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-      };
+      // console.log('hoy',token)
+      // await tokenModel.findOneAndRemove({ name: token.token });
+      // return {
+      //   success: true,
+      //   accessToken: newAccessToken,
+      //   refreshToken: newRefreshToken,
+      // };
     } catch (error) {
       console.log('error del manager', error);
     }
