@@ -7,12 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaPencilAlt } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 import AddEditUsers from "./AddEditUsers";
+import { useGetusersQuery } from "@/redux/services/userServices";
 
 function Users() {
   const [addEditModalUsers, setAddEditModalUsers] = useState(false);
 
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
+  const { data, isLoading, isError } = useGetusersQuery();
+
+  console.log('loading',isLoading)
+  console.log('users',data)
 
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
@@ -45,10 +50,7 @@ function Users() {
     setAddEditModalUsers(true);
   }
 
-  const users = [
-    { nombre: "a", mail: "a", profesion: "a", conexion: "fecha", role: "user" },
-    { nombre: "b", mail: "b", profesion: "a", conexion: "fecha", role: "user" },
-  ];
+
 
   return (
     <div className="w-screen h-screen px-20 py-20">
@@ -68,17 +70,17 @@ function Users() {
             </div>
           </div>
           <div className="w-full p-5">
-            {users.map((el, index) => {
+            {!isLoading && data.users.map((el, index) => {
               return (
                 <div
                   className="w-full flex justify-between align-middle hover:bg-lightGrey p-2"
                   key={index}
                 >
-                  <div>{el.nombre}</div>
+                  <div>{el.name}</div>
                   <div>{el.mail}</div>
-                  <div>{el.profesion}</div>
+                  <div>{el.profession}</div>
                   <div>{el.role}</div>
-                  <div>{el.conexion}</div>
+                  <div>{el.lastConnection}</div>
                   <div className="w-20 flex justify-between align-middle">
                     <FaPencilAlt className="cursor-pointer text-green" />
                     <RiDeleteBin4Line className="cursor-pointer text-magenta" />

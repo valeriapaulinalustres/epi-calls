@@ -11,7 +11,8 @@ import {
 const router = Router();
 
 //Gets a list of all users
-router.get('/', authenticateToken, getUsersController);
+//authenticateToken
+router.get('/', getUsersController);
 
 //Register user
 router.post('/register', registerUserController);

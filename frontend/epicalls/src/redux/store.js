@@ -17,7 +17,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(loginApi.middleware),
 
   middleware: (getdefaultMiddleware) =>
-    getdefaultMiddleware().concat([loginApi.middleware, sheetApi.middleware]),
+    getdefaultMiddleware().concat([loginApi.middleware, sheetApi.middleware, userApi.middleware]),
 });
 
 setupListeners(store.dispatch);
