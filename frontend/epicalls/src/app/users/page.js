@@ -1,11 +1,16 @@
-'use client';
+"use client";
 
-import { setUser } from '@/redux/features/login/loginSlice';
-import { useTokenMutation } from '@/redux/services/loginServices';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from "@/redux/features/login/loginSlice";
+import { useTokenMutation } from "@/redux/services/loginServices";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FaPencilAlt } from "react-icons/fa";
+import { RiDeleteBin4Line } from "react-icons/ri";
+import AddEditUsers from "./AddEditUsers";
 
 function Users() {
+  const [addEditModalUsers, setAddEditModalUsers] = useState(false);
+
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
 
@@ -31,12 +36,64 @@ function Users() {
           console.log(result.isError);
         }
       } catch (error) {
-        console.log('error', error);
+        console.log("error", error);
       }
     })();
   }, [result]);
 
-  return <div>Users</div>;
+  function handleAddUser() {
+    setAddEditModalUsers(true);
+  }
+
+  const users = [
+    { nombre: "a", mail: "a", profesion: "a", conexion: "fecha", role: "user" },
+    { nombre: "b", mail: "b", profesion: "a", conexion: "fecha", role: "user" },
+  ];
+
+  return (
+    <div className="w-screen h-screen px-20 py-20">
+      <div className="w-full flex justify-between align-middle mb-16">
+        <div className="w-full rounded-3xl  shadow-md">
+          <div className="w-full h-14 bg-green rounded-t-3xl flex justify-center align-middle">
+            <div className="w-full flex justify-between align-middle px-5">
+              <div className=" text-white text-2xl my-auto w-9/10">
+                Usuarios
+              </div>
+              <div
+                className="w-1/10 text-white text-2xl text-right self-center cursor-pointer"
+                onClick={handleAddUser}
+              >
+                +
+              </div>
+            </div>
+          </div>
+          <div className="w-full p-5">
+            {users.map((el, index) => {
+              return (
+                <div
+                  className="w-full flex justify-between align-middle hover:bg-lightGrey p-2"
+                  key={index}
+                >
+                  <div>{el.nombre}</div>
+                  <div>{el.mail}</div>
+                  <div>{el.profesion}</div>
+                  <div>{el.role}</div>
+                  <div>{el.conexion}</div>
+                  <div className="w-20 flex justify-between align-middle">
+                    <FaPencilAlt className="cursor-pointer text-green" />
+                    <RiDeleteBin4Line className="cursor-pointer text-magenta" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      {addEditModalUsers && (
+        <AddEditUsers setAddEditModalUsers={setAddEditModalUsers} />
+      )}
+    </div>
+  );
 }
 
 export default Users;

@@ -29,12 +29,12 @@ export const Collapse = ({ title, info, collapsed, children, edition }) => {
             <></>
         }
         {isCollapsed ? (
-          <LuEyeOff
+          <LuEye
             className="cursor-pointer text-cyan w-1/12"
             onClick={() => setIsCollapsed(false)}
           />
         ) : (
-          <LuEye
+          <LuEyeOff
             className="cursor-pointer text-cyan w-1/12"
             onClick={() => setIsCollapsed(true)}
           />

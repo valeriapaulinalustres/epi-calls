@@ -12,6 +12,7 @@ orange: '#FF9F1C',
 green: '#21A300',
 purple: '#B3008C',
 magenta: '#FF3864',
+yellow: '#FFF732',
 white: '#ffffff',
 grey: '#d9d9d9',
 lightGrey: '#f2f2f2'

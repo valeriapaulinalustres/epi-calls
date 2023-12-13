@@ -9,6 +9,7 @@ import * as xlsx from 'xlsx';
 
 function HomeAdmin() {
   const [csvUploaded, setCsvUploaded] = useState([]); //Keeps the uploaded csv's information
+  const [actualProject, setActualProject] = useState('')
 
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
@@ -79,7 +80,16 @@ function HomeAdmin() {
   };
   console.log('csv uploaded', csvUploaded);
 
-  const actualProject = 'Dengue 2023';
+
+
+
+const allProjects = [
+  {name: 'Dengue 2022', id:1},
+  {name: 'Dengue 2023', id:2},
+]
+
+console.log('actual',actualProject)
+
   return (
     <div className='w-screen h-screen px-20 py-20'>
       <div className='w-full flex justify-between align-middle mb-16'>
@@ -167,7 +177,17 @@ function HomeAdmin() {
           </div>
         </div>
         <div className='w-full flex-col justify-between align-top p-5'>
-          <div>Dengue 2023</div>
+          {
+            allProjects.map((el, index)=>{
+              return(
+          <div className='w-full flex justify-between align-middle' key={index}>
+            <h4>{el.name}</h4>
+            <input type='radio' name='project' value={el.name} checked={actualProject === el.name}  onChange={(e)=>setActualProject(e.target.value)}/>
+          </div>
+
+              )
+            })
+          }
         </div>
         </div>
       {/* <div className='upload-spinner'>

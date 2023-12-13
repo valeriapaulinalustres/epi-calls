@@ -93,48 +93,7 @@ function Projects() {
           </Collapse>
         )
       })}
-              
-                {/* <div className="border-b flex w-full justify-between align-middle h-12">
-                  <p className="w-2/6">Dengue 2022</p>
-                  <p className="w-1/6">active</p>
-                  <p className="w-2/6">creado por el brote</p>
-                  <div className="w-1/6">
-                    <div className="w-full flex justify-between align-middle">
-                      <FaPencilAlt className="cursor-pointer " />
-                      <RiDeleteBin4Line className="cursor-pointer " />
-                      <LuEye />
-                      <LuEyeOff />
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full bg-grey h-12">acordeón</div>
-                <div className="border-b flex w-full justify-between align-middle h-12">
-                  <p className="w-2/6">Dengue 2022</p>
-                  <p className="w-1/6">active</p>
-                  <p className="w-2/6">creado por el brote</p>
-                  <div className="w-1/6">
-                    <div className="w-full flex justify-between align-middle">
-                      <FaPencilAlt className="cursor-pointer " />
-                      <RiDeleteBin4Line className="cursor-pointer " />
-                      <LuEye />
-                      <LuEyeOff />
-                    </div>
-                  </div>
-                </div>
-                <div className="border-b flex w-full justify-between align-middle h-12">
-                  <p className="w-2/6">Dengue 2022</p>
-                  <p className="w-1/6">active</p>
-                  <p className="w-2/6">creado por el brote</p>
-                  <div className="w-1/6">
-                    <div className="w-full flex justify-between align-middle">
-                      <FaPencilAlt className="cursor-pointer " />
-                      <RiDeleteBin4Line className="cursor-pointer " />
-                      <LuEye />
-                      <LuEyeOff />
-                    </div>
-                  </div>
-                </div> */}
-              
+            
             
           </div>
         </div>
