@@ -2,4 +2,6 @@
 
 //export const baseURL = 'https://epi-calls-3rzwkg8hd-valeriapaulinalustres.vercel.app/'
 
-export const baseURL ='https://epi-calls.vercel.app/'
+//export const baseURL ='https://epi-calls.vercel.app/'
+
+export const baseURL = 'https://epi-calls-backend.vercel.app/'
