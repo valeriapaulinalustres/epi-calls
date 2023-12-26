@@ -11,6 +11,7 @@ import { useGetusersQuery } from "@/redux/services/userServices";
 
 function Users() {
   const [addEditModalUsers, setAddEditModalUsers] = useState(false);
+  const [forceRender, setForceRender] = useState('');
 
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
@@ -18,7 +19,7 @@ function Users() {
 
   console.log('loading',isLoading)
   console.log('users',data)
-
+console.log('force render',forceRender)
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
   );
@@ -70,6 +71,19 @@ function Users() {
             </div>
           </div>
           <div className="w-full p-5">
+          <div
+                  className="w-full flex justify-between align-middle hover:bg-lightGrey p-2 border-b"
+                 
+                >
+                  <div>Nombre</div>
+                  <div>Mail</div>
+                  <div>Profesión</div>
+                  <div>Rol</div>
+                  <div>Última conexión</div>
+                  <div className="w-20 flex justify-between align-middle">
+                   
+                  </div>
+                </div>
             {!isLoading && data.users.map((el, index) => {
               return (
                 <div
@@ -92,7 +106,7 @@ function Users() {
         </div>
       </div>
       {addEditModalUsers && (
-        <AddEditUsers setAddEditModalUsers={setAddEditModalUsers} />
+        <AddEditUsers setAddEditModalUsers={setAddEditModalUsers} setForceRender={setForceRender}/>
       )}
     </div>
   );

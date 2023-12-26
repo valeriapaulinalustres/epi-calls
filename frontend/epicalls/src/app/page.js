@@ -66,11 +66,13 @@ function Home() {
         type='mail'
         onChange={(e) => setMail(e.target.value)}
         value={mail}
+        className='bg-cyan'
       />
       <input
         type='password'
         onChange={(e) => setPassword(e.target.value)}
         value={password}
+        className=' bg-cyan'
       />
       <Link href='/'>
         <button onClick={handleLogin}>Login</button>
