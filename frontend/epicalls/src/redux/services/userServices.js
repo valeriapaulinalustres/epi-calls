@@ -22,4 +22,4 @@ export const userApi = createApi({
   }),
 });
 
-export const { useGetusersQuery, useRegisteruserMutation} = userApi;
+export const { useGetusersQuery, useRegisteruserMutation, useLazyGetusersQuery} = userApi;

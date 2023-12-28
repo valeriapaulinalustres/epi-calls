@@ -7,19 +7,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaPencilAlt } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 import AddEditUsers from "./AddEditUsers";
-import { useGetusersQuery } from "@/redux/services/userServices";
+import { useGetusersQuery, useLazyGetusersQuery } from "@/redux/services/userServices";
 
 function Users() {
   const [addEditModalUsers, setAddEditModalUsers] = useState(false);
-  const [forceRender, setForceRender] = useState('');
+const [usersFromBack,setUsersFromBack] = useState([])
 
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
-  const { data, isLoading, isError } = useGetusersQuery();
+  const { data, isLoading, isError, error, isSuccess } = useGetusersQuery();
+  const [trigger, res, lastPromiseInfo] = useLazyGetusersQuery()
+ 
 
-  console.log('loading',isLoading)
-  console.log('users',data)
-console.log('force render',forceRender)
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
   );
@@ -29,6 +28,16 @@ console.log('force render',forceRender)
   useEffect(() => {
     triggerToken({ token: refreshToken });
   }, []);
+
+ useEffect(()=>{
+setUsersFromBack(data)
+ },[data])
+
+
+ useEffect(()=>{
+  setUsersFromBack(res.data)
+ },[res])
+ console.log('res de page', res)
 
   //After that, you get an accessToken as result. This will be use in the header of future requests.
   useEffect(() => {
@@ -51,6 +60,7 @@ console.log('force render',forceRender)
     setAddEditModalUsers(true);
   }
 
+  
 
 
   return (
@@ -60,7 +70,7 @@ console.log('force render',forceRender)
           <div className="w-full h-14 bg-green rounded-t-3xl flex justify-center align-middle">
             <div className="w-full flex justify-between align-middle px-5">
               <div className=" text-white text-2xl my-auto w-9/10">
-                Usuarios
+                Usuarios <button onClick={()=>trigger()}>buton</button>
               </div>
               <div
                 className="w-1/10 text-white text-2xl text-right self-center cursor-pointer"
@@ -84,7 +94,7 @@ console.log('force render',forceRender)
                    
                   </div>
                 </div>
-            {!isLoading && data.users.map((el, index) => {
+            {!isLoading && usersFromBack?.users?.map((el, index) => {
               return (
                 <div
                   className="w-full flex justify-between align-middle hover:bg-lightGrey p-2"
@@ -106,7 +116,7 @@ console.log('force render',forceRender)
         </div>
       </div>
       {addEditModalUsers && (
-        <AddEditUsers setAddEditModalUsers={setAddEditModalUsers} setForceRender={setForceRender}/>
+        <AddEditUsers setAddEditModalUsers={setAddEditModalUsers}   trigger={trigger}/>
       )}
     </div>
   );

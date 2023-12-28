@@ -128,11 +128,11 @@ console.log('refresh', refreshTokens)
       //Removes previous refreshToken
       // console.log('hoy',token)
       // await tokenModel.findOneAndRemove({ name: token.token });
-      // return {
-      //   success: true,
-      //   accessToken: newAccessToken,
-      //   refreshToken: newRefreshToken,
-      // };
+      return {
+        success: true,
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      };
     } catch (error) {
       console.log('error del manager', error);
     }

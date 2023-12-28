@@ -6,24 +6,27 @@ import { LuEyeOff } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { useGetusersQuery, useRegisteruserMutation } from "../../redux/services/userServices";
 
-function AddEditUsers({ setAddEditModalUsers, setForceRender }) {
+function AddEditUsers({ setAddEditModalUsers, trigger }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const [triggerNewUser, result] = useRegisteruserMutation();
 
 
 
-  function handleSubmitUser(e) {
-    e.preventDefault();
 
+
+async function handleSubmitUser(e) {
+    e.preventDefault();
+    console.log('ejecuta el handlesubmituser')
+    
     console.log(e.target[0].value);
     console.log(e.target[1].value);
     console.log(e.target[2].value);
     console.log(e.target[3].value);
     console.log(e.target[4].value);
-
+    
     try {
-      triggerNewUser({
+     const response = await triggerNewUser({
         name: e.target[0].value,
         mail: e.target[1].value,
         role: e.target[3].value,
@@ -31,17 +34,21 @@ function AddEditUsers({ setAddEditModalUsers, setForceRender }) {
         profession: e.target[2].value,
       });
       console.log('resultado de crear usuario',result)
-
-
+      
+      
       e.target[0].value = "";
       e.target[1].value = "";
       e.target[2].value = "";
       e.target[3].value = "";
       e.target[4].value = "";
+      
+      if (response.data.success) {
+        trigger()
+        
+              setAddEditModalUsers(false);
+      } 
+      
 
-
-      setAddEditModalUsers(false);
-      setForceRender({});
       
     } catch (error) {
       console.log("error", error);
