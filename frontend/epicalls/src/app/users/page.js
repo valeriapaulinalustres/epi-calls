@@ -18,7 +18,7 @@ const [usersFromBack,setUsersFromBack] = useState([])
   const { data, isLoading, isError, error, isSuccess } = useGetusersQuery();
   const [trigger, res, lastPromiseInfo] = useLazyGetusersQuery()
  
-
+console.log('data', data, usersFromBack)
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
   );
@@ -30,14 +30,20 @@ const [usersFromBack,setUsersFromBack] = useState([])
   }, []);
 
  useEffect(()=>{
-setUsersFromBack(data)
- },[data])
+  // if (res.data !== undefined) {
+
+  //   setUsersFromBack(res)
+  // } else {
+  //   setUsersFromBack(data)
+  // }
+  setUsersFromBack(data)
+ },[data,res])
 
 
- useEffect(()=>{
-  setUsersFromBack(res.data)
- },[res])
- console.log('res de page', res)
+//  useEffect(()=>{
+//   setUsersFromBack(res.data)
+//  },[res])
+  console.log('res de page', res)
 
   //After that, you get an accessToken as result. This will be use in the header of future requests.
   useEffect(() => {
