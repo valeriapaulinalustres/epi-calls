@@ -10,18 +10,28 @@ import AddEdit from "./AddEdit";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import { Collapse } from "@/components/Collapse";
+import { useGetprojectsQuery } from "@/redux/services/projectServices";
+import { useGetusersQuery } from "@/redux/services/userServices";
 
 function Projects() {
   const [addEditModal, setAddEditModal] = useState(false);
 
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
+  const { data, isLoading, isError, error, isSuccess } = useGetprojectsQuery();
+  const { data: dataUsers } = useGetusersQuery();
+const [projectsFromBack, setProjectsFromBack] = useState([])
+const [usersFromBack, setUsersFromBack] = useState([])
+
+console.log('users', dataUsers)
 
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshTokenToken
   );
   console.log("ver token", refreshToken);
   const user = useSelector((state) => state.loginReducer.value);
+
+  console.log('data proj', data)
 
   //Handle of refresh token: at login you get token and refresh token, then navigates here. Then you call triggerToken passing the refresh token
   useEffect(() => {
@@ -48,6 +58,14 @@ function Projects() {
   function handleAdd() {
     setAddEditModal(true);
   }
+
+  useEffect(()=>{
+setProjectsFromBack(data)
+  },[data])
+
+  useEffect(()=>{
+    setUsersFromBack(dataUsers)
+      },[dataUsers])
 
   const aboutUs = [
     {
@@ -86,10 +104,19 @@ function Projects() {
             </div>
           </div>
           <div className="w-full p-5">
-          {aboutUs.map((item, index) => {
+          {projectsFromBack?.projects?.map((item, index) => {
         return (
-          <Collapse key={index} title={item.title} info={item.state} collapsed={true} edition={true}>
-            <p>{item.content}</p>
+          <Collapse key={index} title={item.name} info={item.state} disease={item.disease} collapsed={true} edition={true}>
+            <p>{item.comments}</p>
+            <p>Cantidad de llamados: {item.calls.quantity}</p>
+            <p>Frecuencia de llamados: {item.calls.frequencyInDays} días</p>
+            <p>Colaboradores: {
+              item.collaborators.map(el=>{
+                return (
+                  <div>{dataUsers && dataUsers.users[dataUsers?.users.findIndex(el=>el.id === item.user)].name},</div>
+                )
+              })
+              }</p>
           </Collapse>
         )
       })}

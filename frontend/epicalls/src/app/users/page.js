@@ -30,19 +30,11 @@ console.log('data', data, usersFromBack)
   }, []);
 
  useEffect(()=>{
-  // if (res.data !== undefined) {
 
-  //   setUsersFromBack(res)
-  // } else {
-  //   setUsersFromBack(data)
-  // }
   setUsersFromBack(data)
  },[data,res])
 
 
-//  useEffect(()=>{
-//   setUsersFromBack(res.data)
-//  },[res])
   console.log('res de page', res)
 
   //After that, you get an accessToken as result. This will be use in the header of future requests.
@@ -66,7 +58,9 @@ console.log('data', data, usersFromBack)
     setAddEditModalUsers(true);
   }
 
-  
+  function handleDelete (el) {
+
+  }
 
 
   return (
@@ -113,7 +107,7 @@ console.log('data', data, usersFromBack)
                   <div>{el.lastConnection}</div>
                   <div className="w-20 flex justify-between align-middle">
                     <FaPencilAlt className="cursor-pointer text-green" />
-                    <RiDeleteBin4Line className="cursor-pointer text-magenta" />
+                    <RiDeleteBin4Line className="cursor-pointer text-magenta" onClick={()=>handleDelete(el)}/>
                   </div>
                 </div>
               );

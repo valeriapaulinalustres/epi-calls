@@ -12,9 +12,6 @@ function AddEditUsers({ setAddEditModalUsers, trigger }) {
   const [triggerNewUser, result] = useRegisteruserMutation();
 
 
-
-
-
 async function handleSubmitUser(e) {
     e.preventDefault();
     console.log('ejecuta el handlesubmituser')

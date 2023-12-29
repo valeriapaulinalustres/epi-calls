@@ -6,17 +6,20 @@ import { LuEyeOff } from "react-icons/lu";
 import { FaPencilAlt } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 
-export const Collapse = ({ title, info, collapsed, children, edition }) => {
+export const Collapse = ({ title, info, collapsed, children, edition, disease }) => {
   const [isCollapsed, setIsCollapsed] = useState(collapsed);
   
 
   return (
     <div className="mb-2">
       <header className="w-full h-10 border-solid shadow-md p-4 flex justify-between align-baseline mb-2">
-        <h3 className=" w-7/12">
+        <h3 className=" w-4/12">
           {title}
         </h3>
-        <h3 className="w-5/12">{info}</h3>
+        <h3 className=" w-4/12">
+          {disease}
+        </h3>
+        <h3 className="w-4/12">{info}</h3>
         {
             edition ?
             

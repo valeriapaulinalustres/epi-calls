@@ -1,0 +1,3 @@
+Falta la ruta de usuarios y todo el front para delete y edit users
+Falta poner en el backend si un proyecto está activo o no
+En cada proyecto, en collaborators, falta que en user traiga el nombre, no el id
