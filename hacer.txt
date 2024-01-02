@@ -1,3 +1,8 @@
 Falta la ruta de usuarios y todo el front para delete y edit users
 Falta poner en el backend si un proyecto está activo o no
-En cada proyecto, en collaborators, falta que en user traiga el nombre, no el id
+
+Para ver lo del useGetLazy ver ejemplo en addEditProjects y su page
+
+Vista users y projects terminado (sólo falta edit y erase)
+
+seguir en home. Al elegir abajo un proyecto, que muestre los usuaios client

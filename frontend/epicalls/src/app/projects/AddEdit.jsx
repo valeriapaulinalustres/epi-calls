@@ -4,13 +4,13 @@ import { useCreateprojectMutation } from "@/redux/services/projectServices";
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
 
-function AddEdit({ setAddEditModal }) {
+function AddEdit({ setAddEditModal, trigger }) {
   const [checkedUsers, setCheckedUsers] = useState([]);
   const [checkedDiagnosis, setCheckedDiagnosis] = useState([]);
 
   const [triggerNewProject, result] = useCreateprojectMutation();
 
-  function handleSubmitProject(e) {
+  async function handleSubmitProject(e) {
     e.preventDefault();
     console.log(e.target[0].value);
     console.log(e.target[1].value);
@@ -30,11 +30,34 @@ function AddEdit({ setAddEditModal }) {
       patientsFilter:{
         searchFromInWeeks: e.target[2].value,
         diagnosis: checkedDiagnosis,
-      }
+      },
+      collaboratorsTodayActive: false
     };
 
     try {
-      triggerNewProject();
+     const result = await triggerNewProject(newProject);
+console.log(result)
+
+if (result.data.success) {
+  trigger()
+  e.target[0].value="";
+      e.target[1].value="";
+      e.target[2].value="";
+      e.target[3].value="";
+      e.target[4].value="";
+      e.target[5].value="";
+      e.target[6].value="";
+      e.target[7].value="";
+      e.target[8].value="";
+      e.target[9].value="";
+      setCheckedDiagnosis([]);
+      setCheckedUsers([]);
+    
+      
+      setAddEditModal(false);
+}
+
+    
     } catch (error) {
       console.log("error en create project", error);
     }
@@ -148,11 +171,11 @@ function AddEdit({ setAddEditModal }) {
                 <p className="mb-4">Llamados:</p>
                 <div className="flex mb-2">
                   <p className="mr-2">Cantidad total:</p>
-                  <input type="number" className="border w-6 h-6 px-2" />
+                  <input type="number" className="border h-6 px-2 w-10" />
                 </div>
                 <div className="flex">
                   <p className="mr-2">Frecuencia:</p>
-                  <input type="number" className="border w-6 h-6 px-2" />
+                  <input type="number" className="border w-10 h-6 px-2" />
                 </div>
               </div>
             </div>

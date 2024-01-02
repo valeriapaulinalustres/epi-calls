@@ -2,7 +2,9 @@
 
 import { setUser } from '@/redux/features/login/loginSlice';
 import { useTokenMutation } from '@/redux/services/loginServices';
+import { useGetprojectsQuery } from '@/redux/services/projectServices';
 import { useCreatesheetMutation } from '@/redux/services/sheetServices';
+import { useGetusersQuery } from '@/redux/services/userServices';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as xlsx from 'xlsx';
@@ -14,6 +16,9 @@ function HomeAdmin() {
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
   const [triggerCreateSheet, resultSheet] = useCreatesheetMutation();
+
+  const { data: dataProjects, isLoading, isError, error, isSuccess } = useGetprojectsQuery();
+  const { data: dataUsers } = useGetusersQuery();
 
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
@@ -84,13 +89,9 @@ function HomeAdmin() {
 
 
 
-
-const allProjects = [
-  {name: 'Dengue 2022', id:1},
-  {name: 'Dengue 2023', id:2},
-]
-
 console.log('actual',actualProject)
+
+console.log('dataProjects', dataProjects)
 
   return (
     <div className='w-screen h-screen px-20 py-20'>
@@ -122,8 +123,18 @@ console.log('actual',actualProject)
             </div>
             <p className='my-4'>Colaboradores del proyecto</p>
             <div className='w-full ml-3'>
-              <p className='text-cyan'>Lara</p>
-              <p className='text-cyan'>Lourdes</p>
+              {
+                dataUsers?.users?.map((el)=>{
+                  if(el.role === 'client') {
+
+                    return(
+                      <p className='text-cyan'>{el.id}</p>
+                    )
+                  }
+                
+                })
+              }
+
             </div>
             <div className='w-full flex justify-between align-middle '>
               <p className='text-orange-500 my-4'>
@@ -180,7 +191,7 @@ console.log('actual',actualProject)
         </div>
         <div className='w-full flex-col justify-between align-top p-5'>
           {
-            allProjects.map((el, index)=>{
+            dataProjects?.projects?.map((el, index)=>{
               return(
           <div className='w-full flex justify-between align-middle' key={index}>
             <h4>{el.name}</h4>

@@ -12,7 +12,7 @@ export const projectApi = createApi({
     }),
     createproject: builder.mutation({
       query: (newProject) => ({
-          url: 'api/users/projects/createproject',
+          url: "/api/projects/createproject",
           method: 'POST',
           body: newProject,
           
@@ -22,4 +22,4 @@ export const projectApi = createApi({
   }),
 });
 
-export const { useGetprojectsQuery, useCreateprojectMutation} = projectApi;
+export const { useGetprojectsQuery, useCreateprojectMutation, useLazyGetprojectsQuery} = projectApi;

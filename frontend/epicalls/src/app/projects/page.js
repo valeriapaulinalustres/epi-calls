@@ -10,7 +10,7 @@ import AddEdit from "./AddEdit";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import { Collapse } from "@/components/Collapse";
-import { useGetprojectsQuery } from "@/redux/services/projectServices";
+import { useGetprojectsQuery, useLazyGetprojectsQuery } from "@/redux/services/projectServices";
 import { useGetusersQuery } from "@/redux/services/userServices";
 
 function Projects() {
@@ -20,11 +20,13 @@ function Projects() {
   const [triggerToken, result] = useTokenMutation();
   const { data, isLoading, isError, error, isSuccess } = useGetprojectsQuery();
   const { data: dataUsers } = useGetusersQuery();
+const  [trigger, res] = useLazyGetprojectsQuery() //no hace falta usar "res", con hacer el trigger, ya actualiza el dataUsers
+
 const [projectsFromBack, setProjectsFromBack] = useState([])
 const [usersFromBack, setUsersFromBack] = useState([])
 
 console.log('users', dataUsers)
-
+console.log('res', res)
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshTokenToken
   );
@@ -125,7 +127,7 @@ setProjectsFromBack(data)
           </div>
         </div>
       </div>
-      {addEditModal && <AddEdit setAddEditModal={setAddEditModal} />}
+      {addEditModal && <AddEdit setAddEditModal={setAddEditModal} trigger={trigger}/>}
     </div>
   );
 }
