@@ -115,7 +115,7 @@ setProjectsFromBack(data)
             <p>Colaboradores: {
               item.collaborators.map(el=>{
                 return (
-                  <div>{dataUsers && dataUsers.users[dataUsers?.users.findIndex(el=>el.id === item.user)].name},</div>
+                  <div>{dataUsers && dataUsers.users[dataUsers?.users.findIndex(el1=>el1._id === el.user)].name},</div>
                 )
               })
               }</p>

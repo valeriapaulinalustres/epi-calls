@@ -1,12 +1,17 @@
 "use client";
 
 import { useCreateprojectMutation } from "@/redux/services/projectServices";
+import { useGetusersQuery } from "@/redux/services/userServices";
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
 
 function AddEdit({ setAddEditModal, trigger }) {
   const [checkedUsers, setCheckedUsers] = useState([]);
   const [checkedDiagnosis, setCheckedDiagnosis] = useState([]);
+  const [frequency, setFrequency] = useState('')
+  const [quantity, setQuantity] = useState('')
+
+  const { data: dataUsers, isLoading, isError, error, isSuccess } = useGetusersQuery();
 
   const [triggerNewProject, result] = useCreateprojectMutation();
 
@@ -21,16 +26,17 @@ function AddEdit({ setAddEditModal, trigger }) {
 
     const newProject = {
       name: e.target[0].value,
-      disease: e.target[5].value,
+      disease: e.target[7].value,
       comments: e.target[1].value,
       calls: {
-        frequencyInDays: e.target[9].value,
-        quantity: e.target[8].value,
+        frequencyInDays: frequency,
+        quantity: quantity,
       },
       patientsFilter:{
         searchFromInWeeks: e.target[2].value,
         diagnosis: checkedDiagnosis,
       },
+      collaborators: checkedUsers.map(el=>{return {user:el}}),
       collaboratorsTodayActive: false
     };
 
@@ -55,7 +61,7 @@ if (result.data.success) {
     
       
       setAddEditModal(false);
-}
+} else {console.log('error en guardar, crear toastalert')}
 
     
     } catch (error) {
@@ -87,6 +93,10 @@ if (result.data.success) {
     }
     setCheckedDiagnosis(updatedList);
   };
+
+  console.log('dataUsers', dataUsers)
+  console.log('frequency', quantity)
+  console.log('checkedUsers', checkedUsers)
 
   return (
     <div className="bg-white left-0 right-0 top-0 bottom-0 flex fixed z-50">
@@ -123,16 +133,16 @@ if (result.data.success) {
               <div className="flex-col justify-between w-full align-middle ">
                 <p className="mb-4">Colaboradores:</p>
                 <div className="flex-col justify-between align-middle ml-10">
-                  {users.map((el, index) => {
+                  {dataUsers?.users?.map((el, index) => {
                     return (
                       <div className="flex align-middle" key={index}>
                         <input
                           type="checkbox"
                           className="border w-4 h-4 self-center mr-2"
-                          value={el.id}
+                          value={el._id}
                           onChange={handleCheckUsers}
                         />
-                        <p>{el.nombre}</p>
+                        <p>{el.name}</p>
                       </div>
                     );
                   })}
@@ -171,11 +181,11 @@ if (result.data.success) {
                 <p className="mb-4">Llamados:</p>
                 <div className="flex mb-2">
                   <p className="mr-2">Cantidad total:</p>
-                  <input type="number" className="border h-6 px-2 w-10" />
+                  <input type="number" className="border h-6 px-2 w-10" onChange={(e)=>setQuantity(e.target.value)}/>
                 </div>
                 <div className="flex">
                   <p className="mr-2">Frecuencia:</p>
-                  <input type="number" className="border w-10 h-6 px-2" />
+                  <input type="number" className="border w-10 h-6 px-2"  onChange={(e)=>setFrequency(e.target.value)}/>
                 </div>
               </div>
             </div>

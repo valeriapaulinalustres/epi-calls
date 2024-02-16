@@ -90,8 +90,8 @@ async function handleSubmitUser(e) {
               <div className="flex justify-between w-full align-middle mb-4">
                 <p>Rol:</p>
                 <select className="border w-80">
-                  <option>Admin</option>
-                  <option>User</option>
+                  <option>admin</option>
+                  <option>client</option>
                 </select>
               </div>
               <div className="flex justify-between w-full align-middle mb-4">
