@@ -1,13 +1,24 @@
-'use client';
+"use client";
 
-import { setUser } from '@/redux/features/login/loginSlice';
-import { useTokenMutation } from '@/redux/services/loginServices';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { BsFillTelephoneFill } from 'react-icons/bs';
-import { IoIosArrowDown } from 'react-icons/io';
+import { setUser } from "@/redux/features/login/loginSlice";
+import { useTokenMutation } from "@/redux/services/loginServices";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { BsFillTelephoneFill } from "react-icons/bs";
+import { IoIosArrowDown } from "react-icons/io";
+import { CollapsePatients } from "@/components/CollapsePatients";
+import { Checkbox } from "@/components/CheckBox";
 
 function HomeClient() {
+  const [boxPatient, setBoxPatient] = useState(false);
+  const [actualName, setActualName] = useState("");
+  const [emergency, setEmergency] = useState(false);
+  const [argumentative, setArgumentative] = useState(false);
+  const [notAnswer, setNotAnswer] = useState(false);
+  const [recovered, setRecovered] = useState(false);
+  const [description, setDescription] = useState("");
+  const [nextCall, setNextCall] = useState("");
+
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
 
@@ -33,22 +44,56 @@ function HomeClient() {
           console.log(result.isError);
         }
       } catch (error) {
-        console.log('error', error);
+        console.log("error", error);
       }
     })();
   }, [result]);
 
+  const patients = [
+    {
+      name: "Laura Ortiz",
+      tel: "1122334455",
+      fis: "11/3/24",
+      symptoms: "fiebre",
+      dni: 1,
+      nextCall: "1/1",
+    },
+    {
+      name: "Mariela Ortiz",
+      tel: "1122334455",
+      fis: "11/3/24",
+      symptoms: "fiebre",
+      dni: 2,
+      nextCall: "2/2",
+    },
+    {
+      name: "Mariana Ortiz",
+      tel: "1122334455",
+      fis: "11/3/24",
+      symptoms: "fiebre",
+      dni: 3,
+      nextCall: "3/3",
+    },
+  ];
+
+  console.log("aca", recovered, notAnswer, emergency, argumentative);
+  console.log(description);
+
+  function handleSubmit () {
+    
+  }
+
   return (
-    <div className='w-screen h-screen px-20 py-20'>
-      <div className='w-full flex justify-between align-middle mb-16'>
-        <div className='w-1/3 rounded-3xl  shadow-md'>
-          <div className='w-full h-14 bg-orange rounded-t-3xl flex justify-center align-middle'>
-            <div className=' text-white text-2xl my-auto'>
+    <div className="w-screen h-screen px-20 py-20">
+      <div className="w-full flex justify-between align-middle mb-16">
+        <div className="w-1/3 rounded-3xl  shadow-md mb-10">
+          <div className="w-full h-14 bg-orange rounded-t-3xl flex justify-center align-middle">
+            <div className=" text-white text-2xl my-auto">
               Llamados a realizar el ...
             </div>
           </div>
-          <div className='w-full flex justify-between align-top p-5'>
-            <div className='w-full flex-col justify-between align-middle'>
+          <div className="w-full flex flex-col justify-between align-top p-5">
+            {/* <div className='w-full flex-col justify-between align-middle'>
               <div className='w-full border-solid border-cyan shadow-md flex justify-between align-middle p-2 rounded-sm mb-2'>
                 <p className='text-green w-1/3'>Laura</p>
                 <div className='flex justify-between align-middle w-1/4'>
@@ -60,9 +105,80 @@ function HomeClient() {
               <div className='bg-grey p-3'>
 descripción
               </div>
-            </div>
+            </div> */}
+            {patients.map((el, index) => {
+              return (
+                <CollapsePatients
+                  name={el.name}
+                  tel={el.tel}
+                  key={index}
+                  dni={el.dni}
+                  boxPatient={boxPatient}
+                  setBoxPatient={setBoxPatient}
+                  collapsed={true}
+                  setActualName={setActualName}
+                  setNextCall={setNextCall}
+                  patientNextCall={el.nextCall}
+                >
+                  <div>
+                    <p>{el.fis}</p>
+                    <p>{el.symptoms}</p>
+                  </div>
+                </CollapsePatients>
+              );
+            })}
           </div>
         </div>
+        {boxPatient && (
+          <div className="w-2/3 rounded-3xl  shadow-md ml-10 mb-10">
+            <div className="w-full h-14 bg-green rounded-t-3xl flex justify-center align-middle">
+              <div className=" text-white text-2xl my-auto">{actualName}</div>
+            </div>
+            <div className="w-full flex flex-col justify-between align-top p-5">
+              <div className="w-full flex flex-row">
+                <textarea
+                  className="border-green w-1/2 p-2"
+                  placeholder="Agregar descripción"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                ></textarea>
+                <div className="w-1/2 flex flex-col justify-between align-middle ml-5">
+                  <Checkbox
+                    label="Alta"
+                    value={recovered}
+                    onChange={() => setRecovered(!recovered)}
+                  />
+                  <Checkbox
+                    label="No contesta"
+                    value={notAnswer}
+                    onChange={() => setNotAnswer(!notAnswer)}
+                  />
+                  <Checkbox
+                    label="Derivado a urgencias"
+                    value={emergency}
+                    onChange={() => setEmergency(!emergency)}
+                  />
+                  <Checkbox
+                    label="Paciente conflictivo"
+                    value={argumentative}
+                    onChange={() => setArgumentative(!argumentative)}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row justify-between align-middle p-5">
+                <p className="text-orange italic">
+                  Próximo llamado el {nextCall}
+                </p>
+                <button 
+                className="bg-cyan rounded-2xl shadow-md p-2 justify-self-end w-1/2 text-white  hover:bg-magenta duration-700"
+                onClick={handleSubmit}
+                >
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       ;
     </div>
