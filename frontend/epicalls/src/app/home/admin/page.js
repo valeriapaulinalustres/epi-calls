@@ -34,6 +34,7 @@ function HomeAdmin() {
   const user = useSelector((state) => state.loginReducer.value);
 
   console.log("refreshToken", refreshToken);
+  console.log('dataProjects', dataProjects)
 
   //Handle of refresh token: at login you get token and refresh token, then navigates here. Then you call triggerToken passing the refresh token
   useEffect(() => {
@@ -78,7 +79,7 @@ function HomeAdmin() {
     promise.then((d) => {
       
       setCsvUploaded(d);
-      console.log(d);
+      console.log('excel cargado',d);
       triggerCreateSheet({
         excel: d,
         // project: {
