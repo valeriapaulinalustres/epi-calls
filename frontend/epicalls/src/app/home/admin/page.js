@@ -8,6 +8,7 @@ import { useGetusersQuery } from "@/redux/services/userServices";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as xlsx from "xlsx";
+import {calculateEpiWeek} from '../../../functions.js'
 
 function HomeAdmin() {
   const [csvUploaded, setCsvUploaded] = useState([]); //Keeps the uploaded csv's information
@@ -59,7 +60,6 @@ function HomeAdmin() {
   }, [result]);
 
   //Function to upload extern CSV
-
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -80,8 +80,14 @@ function HomeAdmin() {
       
       setCsvUploaded(d);
       console.log('excel cargado',d);
+
+const processedExcel = processExcelUploaded(d)
+
+console.log('processedExcel', processedExcel)
+
       triggerCreateSheet({
-        excel: d,
+        excel: processedExcel,
+       // excel: d,
         // project: {
         //   patientsFilter: {
         //     searchFromInWeeks: actualProjectChecked.patientsFilter.searchFromInWeeks,
@@ -92,13 +98,107 @@ function HomeAdmin() {
         //   },
         // },
         projectId: actualProjectChecked._id,
-         userId: user.mail
+         user: user.mail,
+         collaborators: (actualProjectChecked.collaboratorsToday.length >0) ? actualProjectChecked.collaboratorsToday : actualProjectChecked.collaborators
+
       });
       // setSpinner(false);
     });
   };
 
-console.log('a ver',user)
+  //Function to process uploaded excel (delete duplicates by dni, filter by diagnosis and FA week)
+  function processExcelUploaded(excel){
+console.warn('pasa por acá')
+    //Filter duplicates
+    const dnis = []
+    const excelWithoutDuplicates = []
+excel.forEach(el=>{
+  if (!dnis.includes(el.DNI)) {
+    dnis.push(el.DNI)
+    excelWithoutDuplicates.push(el)
+  }
+})
+console.log('excelWithoutDuplicates',excelWithoutDuplicates)
+
+//Filter by diagnosis
+const excelFilteredByDiagnosis = []
+const diagnosisSelected = [...actualProjectChecked.patientsFilter.diagnosis]
+const confirmed = [
+  'Caso con coinfección de más de un serotipo de Dengue',
+'Caso confirmado DEN-1',
+'Caso confirmado DEN-2',
+'Caso confirmado DEN-3',
+'Caso confirmado por nexo epidemiológico autóctono',
+'Caso confirmado por nexo epidemiológico importado',
+'Caso confirmado sin serotipo',
+'Caso de Dengue en brote con laboratorio (+)'
+]
+const discarded = [
+  'Caso descartado',
+  'Caso descartado por diagnóstico diferencial',
+  'Caso descartado por epidemiología'
+]
+const likely = [
+  'Caso probable'
+]
+const suspicius = [
+  'Caso sospechoso',
+  'Caso sospechoso no conclusivo'
+]
+if (diagnosisSelected.includes('confirmados')){
+  excelWithoutDuplicates.forEach(el=>{
+    if (confirmed.includes(el.CLASIFICACION_MANUAL)) {
+      excelFilteredByDiagnosis.push(el)
+    }
+  })
+}
+
+if (diagnosisSelected.includes('descartados')) {
+  excelWithoutDuplicates.forEach(el=>{
+    if (discarded.includes(el.CLASIFICACION_MANUAL)) {
+      excelFilteredByDiagnosis.push(el)
+    }
+  })
+}
+
+if (diagnosisSelected.includes('probables')) {
+  excelWithoutDuplicates.forEach(el=>{
+    if (likely.includes(el.CLASIFICACION_MANUAL)) {
+      excelFilteredByDiagnosis.push(el)
+    }
+  })
+}
+
+if (diagnosisSelected.includes('sospechosos')) {
+  excelWithoutDuplicates.forEach(el=>{
+    if (suspicius.includes(el.CLASIFICACION_MANUAL)) {
+      excelFilteredByDiagnosis.push(el)
+    }
+  })
+}
+
+
+
+//Filter by quantity of weeks selected
+//Calculate Epi Week
+const actualEpiWeek = calculateEpiWeek()
+const weeksFrom = actualEpiWeek - actualProjectChecked.patientsFilter.searchFromInWeeks
+const excelFilteredByWeeks = []
+
+excelFilteredByDiagnosis.forEach(el=>{
+  if (el.SE_APERTURA >= weeksFrom) {
+    excelFilteredByWeeks.push(el)
+  }
+})
+
+console.log('excelFilteredByWeeks', excelFilteredByWeeks)
+
+
+
+return excelFilteredByWeeks
+  }
+
+console.log('user',user)
 
   useEffect(() => {
     if (actualProjectChecked.hasOwnProperty("collaborators")) {
@@ -230,9 +330,9 @@ actualProjectChecked.hasOwnProperty('collaborators') &&
               <p className="my-4">Colaboradores del proyecto</p>
               <div className="w-full ml-3">
                 {projectUsers?.length > 0 ? (
-                  projectUsers.map((el) => {
+                  projectUsers.map((el,index) => {
                     if (el.role === "client") {
-                      return <p className="text-cyan">{el.name}</p>;
+                      return <p className="text-cyan" key={index}>{el.name}</p>;
                     }
                   })
                 ) : (

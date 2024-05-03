@@ -6,6 +6,9 @@ Para ver lo del useGetLazy ver ejemplo en addEditProjects y su page
 Vista users y projects terminado (sólo falta edit y erase)
 
 Seguir con:
-Home lo básico terminado. Controlar paso a paso el envío del excel. Funciona pero no con exactitud el filtro de los casos. 
+Home lo básico terminado. 
 Una vez resuelto, seguir con el home 'client'.
 Excel de prueba se encuentra en 'Freelance'
+
+2/5/24
+terminado la creación de sheets. Falta testearlas bien
