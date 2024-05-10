@@ -6,9 +6,14 @@ Para ver lo del useGetLazy ver ejemplo en addEditProjects y su page
 Vista users y projects terminado (sólo falta edit y erase)
 
 Seguir con:
-Home lo básico terminado. 
+
 Una vez resuelto, seguir con el home 'client'.
 Excel de prueba se encuentra en 'Freelance'
 
 2/5/24
-terminado la creación de sheets. Falta testearlas bien
+terminado la creación de sheets. Ya testeadas
+
+*manejar el error que ocurriría si se borra un usuario y permanece como colaborador en un proyecto!!
+*cuando se esté en la parte en la que los colaboradores completan, al dar un alta, agregar a esa persona como alta para que se cree una sheet aparte con todas las altas y no se divida entre colaboradores
+ 
+ seguir con home de client, ya llega bien la sheet correspondiente, falta organizar lo que ve

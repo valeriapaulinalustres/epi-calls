@@ -8,6 +8,7 @@ import { BsFillTelephoneFill } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { CollapsePatients } from "@/components/CollapsePatients";
 import { Checkbox } from "@/components/CheckBox";
+import { useGetonesheetMutation } from "@/redux/services/sheetServices";
 
 function HomeClient() {
   const [boxPatient, setBoxPatient] = useState(false);
@@ -18,9 +19,13 @@ function HomeClient() {
   const [recovered, setRecovered] = useState(false);
   const [description, setDescription] = useState("");
   const [nextCall, setNextCall] = useState("");
+  const [sheet, setSheet] = useState([])
 
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
+  const [triggerGetonesheetMutation, oneSheetResult] = useGetonesheetMutation();
+
+
 
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
@@ -48,6 +53,27 @@ function HomeClient() {
       }
     })();
   }, [result]);
+
+  useEffect(() => {
+    console.log('acá mail', user.mail)
+    triggerGetonesheetMutation({ mail: user.mail });
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (oneSheetResult.isSuccess) {
+          console.log('oneSheetResult',oneSheetResult);
+setSheet(oneSheetResult.data.sheets[0].excel)
+        //  dispatch(setUser({ ...user, accessToken: result.data.accessToken }));
+        } else if (oneSheetResult.isError) {
+          console.log(oneSheetResult.isError);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    })();
+  }, [oneSheetResult]);
 
   const patients = [
     {
@@ -79,6 +105,24 @@ function HomeClient() {
   console.log("aca", recovered, notAnswer, emergency, argumentative);
   console.log(description);
 
+  //Gets and prepates Date
+  function getDate() {
+    const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+    const fechaActual = new Date();
+    const diaSemana = diasSemana[fechaActual.getDay()];
+    const dia = fechaActual.getDate();
+    const mes = meses[fechaActual.getMonth()];
+    const año = fechaActual.getFullYear();
+
+    return `${diaSemana} ${dia} de ${mes} de ${año}`;
+}
+
+const today = getDate();
+console.log(today);
+
+
   function handleSubmit () {
     
   }
@@ -89,7 +133,7 @@ function HomeClient() {
         <div className="w-1/3 rounded-3xl  shadow-md mb-10">
           <div className="w-full h-14 bg-orange rounded-t-3xl flex justify-center align-middle">
             <div className=" text-white text-2xl my-auto">
-              Llamados a realizar el ...
+              Llamados a realizar el {today}
             </div>
           </div>
           <div className="w-full flex flex-col justify-between align-top p-5">
@@ -106,23 +150,23 @@ function HomeClient() {
 descripción
               </div>
             </div> */}
-            {patients.map((el, index) => {
+            {sheet.map((el, index) => {
               return (
                 <CollapsePatients
-                  name={el.name}
-                  tel={el.tel}
+                  name={`${el.APELLIDO}, ${el.NOMBRE}`}
+                  tel={el.CONTACTO}
                   key={index}
-                  dni={el.dni}
+                  dni={el.DNI}
                   boxPatient={boxPatient}
                   setBoxPatient={setBoxPatient}
                   collapsed={true}
                   setActualName={setActualName}
                   setNextCall={setNextCall}
-                  patientNextCall={el.nextCall}
+                 // patientNextCall={el.nextCall} ESTO FALTA HACER
                 >
                   <div>
-                    <p>{el.fis}</p>
-                    <p>{el.symptoms}</p>
+                    <p>{el.FIS}</p>
+                    {/* <p>{el.symptoms}</p> */}
                   </div>
                 </CollapsePatients>
               );

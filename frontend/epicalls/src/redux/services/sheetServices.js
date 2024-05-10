@@ -15,8 +15,16 @@ export const sheetApi = createApi({
                 
             })
         }),
+        getonesheet: builder.mutation({
+            query: (mail) => ({
+                url: 'api/sheets/getonesheet',
+                method: 'POST',
+                body: mail,
+                
+            })
+        }),
        
     })
 })
 
-export const {useCreatesheetMutation} = sheetApi
+export const {useCreatesheetMutation, useGetonesheetMutation} = sheetApi

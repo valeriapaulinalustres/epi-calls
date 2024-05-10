@@ -88,6 +88,12 @@ setProjectsFromBack(data)
     },
   ];
 
+  console.log('dataUsers', dataUsers)
+
+ 
+
+ console.log('projectsFromBack', projectsFromBack)
+
   return (
     <div className="w-screen h-screen px-20 py-20">
       <div className="w-full flex justify-between align-middle mb-16">
@@ -113,10 +119,13 @@ setProjectsFromBack(data)
             <p>Cantidad de llamados: {item.calls.quantity}</p>
             <p>Frecuencia de llamados: {item.calls.frequencyInDays} días</p>
             <p>Colaboradores: {
+
               item.collaborators.map(el=>{
+                console.log('item', item)
                 return (
-                  <div>{dataUsers && dataUsers.users[dataUsers?.users.findIndex(el1=>el1._id === el.user)].name},</div>
+                  <div>{dataUsers && dataUsers.users.length >0 && dataUsers.users[dataUsers.users.findIndex(el1=>el1.mail === el.user)].name},</div>
                 )
+               
               })
               }</p>
           </Collapse>

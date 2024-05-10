@@ -17,6 +17,22 @@ function AddEdit({ setAddEditModal, trigger }) {
 
   async function handleSubmitProject(e) {
     e.preventDefault();
+
+    if (
+      !e.target[0].value ||
+      !e.target[1].value ||
+      !e.target[4].value ||
+      !e.target[7].value ||
+      !e.target[8].value ||
+      !frequency ||
+      !quantity ||
+      checkedDiagnosis.length === 0 ||
+      checkedUsers.length === 0
+
+
+
+    ) { return console.error('Nota mental: poner toast alert, todos los campos son requeridos')}
+
     console.log(e.target[0].value);
     console.log(e.target[1].value);
     console.log(e.target[4].value);
@@ -139,7 +155,7 @@ if (result.data.success) {
                         <input
                           type="checkbox"
                           className="border w-4 h-4 self-center mr-2"
-                          value={el._id}
+                          value={el.mail}
                           onChange={handleCheckUsers}
                         />
                         <p>{el.name}</p>
