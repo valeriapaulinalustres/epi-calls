@@ -6,13 +6,13 @@ import { LuEyeOff } from "react-icons/lu";
 import { FaPencilAlt } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 
-export const CollapsePatients = ({ name, dni, collapsed, children, edition, tel, boxPatient, setBoxPatient, setActualName, setNextCall, patientNextCall }) => {
+export const CollapsePatients = ({ name, dni, collapsed, children, edition, tel, boxPatient, setBoxPatient, setActualPatient, setNextCall, patientNextCall }) => {
   const [isCollapsed, setIsCollapsed] = useState(collapsed);
   
 
   function changeBoxPatient () {
     setBoxPatient(true)
-    setActualName(name)
+    setActualPatient({name, dni})
     setNextCall(patientNextCall)
     console.log(dni)
   }
@@ -20,10 +20,10 @@ export const CollapsePatients = ({ name, dni, collapsed, children, edition, tel,
   return (
     <div className="mb-2 w-full" onClick={changeBoxPatient}>
       <header className="w-full h-10 border-solid shadow-md p-4 flex justify-between align-baseline mb-2">
-        <h3 className=" w-6/12">
+        <h3 className=" w-9/12">
           {name}
         </h3>
-        <h3 className=" w-6/12">
+        <h3 className=" w-3/12">
           {tel}
         </h3>
         {/* <h3 className="w-4/12">{dni}</h3> */}

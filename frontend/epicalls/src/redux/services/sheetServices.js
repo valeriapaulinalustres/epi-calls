@@ -23,8 +23,16 @@ export const sheetApi = createApi({
                 
             })
         }),
+        updatesheet: builder.mutation({
+            query: (update) => ({
+                url: 'api/sheets/updatesheet',
+                method: 'POST',
+                body: update,
+                
+            })
+        }),
        
     })
 })
 
-export const {useCreatesheetMutation, useGetonesheetMutation} = sheetApi
+export const {useCreatesheetMutation, useGetonesheetMutation, useUpdatesheetMutation} = sheetApi

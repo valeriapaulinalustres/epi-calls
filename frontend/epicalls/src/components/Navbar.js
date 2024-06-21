@@ -12,7 +12,16 @@ console.log('user desde nav', user)
       user.role === 'admin' ?
         <>
           <div className='w-screen h-24 px-20 shadow-md flex justify-between items-end py-2'>
-            <div >EPI</div>
+            <h1 >
+            <span className="text-cyan text-3xl">E</span>
+          <span className="text-green text-3xl">P</span>
+          <span className="text-orange text-3xl">I</span>
+          <span className="text-magenta text-3xl">c</span>
+          <span className="text-purple text-3xl">a</span>
+          <span className="text-cyan text-3xl">l</span>
+          <span className="text-green text-3xl">l</span>
+          <span className="text-orange text-3xl">s</span>
+            </h1>
             <div>user</div>
           </div>
           <div className='w-screen h-12 py-2 shadow-md flex justify-center items-center px-72'>
@@ -38,8 +47,17 @@ console.log('user desde nav', user)
        : user.role === 'client' ?
       <>
           <div className='w-screen h-24 px-20 shadow-md flex justify-between items-end py-2'>
-            <div >EPI</div>
-            <div>user</div>
+          <h1 >
+            <span className="text-cyan text-3xl">E</span>
+          <span className="text-green text-3xl">P</span>
+          <span className="text-orange text-3xl">I</span>
+          <span className="text-magenta text-3xl">c</span>
+          <span className="text-purple text-3xl">a</span>
+          <span className="text-cyan text-3xl">l</span>
+          <span className="text-green text-3xl">l</span>
+          <span className="text-orange text-3xl">s</span>
+            </h1>
+            <p className='text-magenta'>Buen día, {user.name}</p>
           </div>
      
         </>

@@ -8,11 +8,14 @@ import { BsFillTelephoneFill } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { CollapsePatients } from "@/components/CollapsePatients";
 import { Checkbox } from "@/components/CheckBox";
-import { useGetonesheetMutation } from "@/redux/services/sheetServices";
+import { useGetonesheetMutation, useUpdatesheetMutation } from "@/redux/services/sheetServices";
+import { toastAlert } from "@/utils/alerts";
 
 function HomeClient() {
+
+  
   const [boxPatient, setBoxPatient] = useState(false);
-  const [actualName, setActualName] = useState("");
+  const [actualPatient, setActualPatient] = useState("");
   const [emergency, setEmergency] = useState(false);
   const [argumentative, setArgumentative] = useState(false);
   const [notAnswer, setNotAnswer] = useState(false);
@@ -20,12 +23,33 @@ function HomeClient() {
   const [description, setDescription] = useState("");
   const [nextCall, setNextCall] = useState("");
   const [sheet, setSheet] = useState([])
-
+  const [updatedPatients, setUpdatedPatients] = useState([])//guarda todos los cambios luego de los llamados
+  
   const dispatch = useDispatch();
   const [triggerToken, result] = useTokenMutation();
   const [triggerGetonesheetMutation, oneSheetResult] = useGetonesheetMutation();
+  const [triggerUpdatesheetMutation, updateSheetResult] = useUpdatesheetMutation()
 
+  useEffect(()=>{
+    setDescription('')
+    setRecovered('')
+    setNotAnswer('')
+    setEmergency('')
+    setArgumentative('')
+    
+    if (updatedPatients.length >0) {
+      const updatedPatient = updatedPatients.find(el=> el.dni === actualPatient.dni)
+      if (updatedPatient) {
+        setDescription(updatedPatient.description)
+        setRecovered(updatedPatient.recovered)
+        setEmergency(updatedPatient.emergency)
+        setNotAnswer(updatedPatient.notAnswer)
+        setArgumentative(updatedPatient.argumentative)
+      }
+    }
+  },[actualPatient])
 
+  console.log('updatedPatients', updatedPatients)
 
   const refreshToken = useSelector(
     (state) => state.loginReducer.value.refreshToken
@@ -102,8 +126,6 @@ setSheet(oneSheetResult.data.sheets[0].excel)
     },
   ];
 
-  console.log("aca", recovered, notAnswer, emergency, argumentative);
-  console.log(description);
 
   //Gets and prepates Date
   function getDate() {
@@ -120,12 +142,61 @@ setSheet(oneSheetResult.data.sheets[0].excel)
 }
 
 const today = getDate();
-console.log(today);
+
 
 
   function handleSubmit () {
-    
+    console.log('submit', description, recovered, notAnswer, emergency, argumentative, user)
+
+const existPatient = updatedPatients.find(el=>el.dni === actualPatient.dni)
+
+if (existPatient) {
+
+  const updatedPatientsCopy = updatedPatients.slice()
+
+  //Actualiza el array de pacientes con la edición 
+  const updatedArray = updatedPatientsCopy.map(el => 
+    el.dni === existPatient.dni ? { 
+      ...el,  
+      description, 
+      recovered, 
+      notAnswer, 
+      emergency, 
+      argumentative, 
+    } : el
+  );
+
+  setUpdatedPatients(updatedArray)
+  toastAlert('success','Actualizado')
+} else {
+
+  const newUpdatedPatient = {
+    description, 
+    recovered, 
+    notAnswer, 
+    emergency, 
+    argumentative, 
+    user: user.mail, 
+    dni: actualPatient.dni
   }
+  
+  setUpdatedPatients([...updatedPatients, newUpdatedPatient])
+  toastAlert('success','Actualizado')
+}
+
+
+  }
+
+  function handleSendToBack () {
+  
+    try {
+      triggerUpdatesheetMutation(updatedPatients)
+      
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+  
 
   return (
     <div className="w-screen h-screen px-20 py-20">
@@ -133,7 +204,7 @@ console.log(today);
         <div className="w-1/3 rounded-3xl  shadow-md mb-10">
           <div className="w-full h-14 bg-orange rounded-t-3xl flex justify-center align-middle">
             <div className=" text-white text-2xl my-auto">
-              Llamados a realizar el {today}
+              Llamados del {today}
             </div>
           </div>
           <div className="w-full flex flex-col justify-between align-top p-5">
@@ -160,7 +231,7 @@ descripción
                   boxPatient={boxPatient}
                   setBoxPatient={setBoxPatient}
                   collapsed={true}
-                  setActualName={setActualName}
+                  setActualPatient={setActualPatient}
                   setNextCall={setNextCall}
                  // patientNextCall={el.nextCall} ESTO FALTA HACER
                 >
@@ -174,9 +245,10 @@ descripción
           </div>
         </div>
         {boxPatient && (
-          <div className="w-2/3 rounded-3xl  shadow-md ml-10 mb-10">
+          <div className="w-2/3  ml-10 mb-10">
+             <div className="w-full rounded-3xl  shadow-md mb-5 ">
             <div className="w-full h-14 bg-green rounded-t-3xl flex justify-center align-middle">
-              <div className=" text-white text-2xl my-auto">{actualName}</div>
+              <div className=" text-white text-2xl my-auto">{actualPatient.name}</div>
             </div>
             <div className="w-full flex flex-col justify-between align-top p-5">
               <div className="w-full flex flex-row">
@@ -217,14 +289,24 @@ descripción
                 className="bg-cyan rounded-2xl shadow-md p-2 justify-self-end w-1/2 text-white  hover:bg-magenta duration-700"
                 onClick={handleSubmit}
                 >
-                  Guardar
+                  Guardar paciente
                 </button>
               </div>
             </div>
+     
           </div>
+      <button
+            className="w-full bg-cyan rounded-2xl shadow-md p-2 justify-self-end  text-white  hover:bg-magenta duration-700"
+            onClick={handleSendToBack}
+            >
+              Enviar datos al final del día
+              </button>
+
+          </div>         
+         
         )}
       </div>
-      ;
+
     </div>
   );
 }
